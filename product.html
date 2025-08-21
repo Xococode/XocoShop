@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detalle del Producto</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+  <style>
+    :root {
+      --primary-color: #667eea; --secondary-color: #764ba2; --success-color: #4ade80; --error-color: #ef4444; --text-primary: #1f2937; --text-secondary: #6b7280; --text-muted: #9ca3af; --bg-primary: #ffffff; --bg-secondary: #f8fafc; --border-color: #e2e8f0; --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1); --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); color: var(--text-primary); line-height: 1.6; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1rem; }
+    .header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; padding: 1rem 0; }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .logo { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+    .header-actions { display: flex; align-items: center; gap: 1rem; }
+    .wishlist-toggle, .cart-toggle { position: relative; cursor: pointer; padding: 0.5rem; }
+    .cart-count, .wishlist-count { background: var(--error-color); color: white; border-radius: 50%; width: 20px; height: 20px; display: none; align-items: center; justify-content: center; font-size: 0.75rem; position: absolute; top: -5px; right: -5px; }
+    .cart-count.show, .wishlist-count.show { display: flex !important; }
+    .product-detail-section { padding: 3rem 0; }
+    .product-detail-container { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; background: var(--bg-primary); padding: 2rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-md); }
+    .product-image-column .main-image { width: 100%; border-radius: var(--radius-lg); aspect-ratio: 1 / 1; object-fit: cover; }
+    .product-details-column .brand { font-size: 1rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    .product-details-column h1 { font-size: 2.5rem; margin: 0 0 1rem; }
+    .product-details-column .description { font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; }
+    .options-container { display: flex; flex-direction: column; gap: 1.5rem; margin: 1.5rem 0; }
+    .selector-label { font-weight: 600; margin-bottom: 0.5rem; }
+    .finish-select, .size-select { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 1rem; }
+    .price { font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 1.5rem; }
+    .actions { display: flex; gap: 1rem; }
+    .add-to-cart-btn { flex-grow: 1; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; padding: 1rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1rem; }
+    .add-to-cart-btn.in-cart { background: var(--success-color); }
+    .wishlist-btn { background: var(--bg-secondary); border: 1px solid var(--border-color); font-size: 1.5rem; color: var(--text-muted); cursor: pointer; transition: var(--transition); padding: 1rem; border-radius: var(--radius-md); }
+    .wishlist-btn.active { color: var(--error-color); background: rgba(239, 68, 68, 0.1); border-color: var(--error-color); }
+    .rating { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .stars { display: flex; gap: 0.125rem; color: var(--warning-color); }
+    .star.empty { color: var(--border-color); }
+    .rating-text { font-size: 0.875rem; color: var(--text-muted); }
+    .search-container { flex: 1; min-width: 250px; max-width: 500px; position: relative; }
+    .search-input { width: 100%; padding: 0.6rem 1rem 0.6rem 2.5rem; border: 2px solid var(--border-color); border-radius: var(--radius-lg); font-size: 1rem; }
+    .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.25rem; }
+    .wishlist-sidebar, .cart-sidebar { position: fixed; top: 0; right: -420px; width: 400px; max-width: 100vw; height: 100vh; background: var(--bg-primary); box-shadow: var(--shadow-md); z-index: 1000; transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; }
+    .wishlist-sidebar.open, .cart-sidebar.open { right: 0; }
+    .wishlist-overlay, .cart-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 999; opacity: 0; visibility: hidden; transition: var(--transition); }
+    .wishlist-overlay.show, .cart-overlay.show { opacity: 1; visibility: visible; }
+    .wishlist-header, .cart-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .wishlist-title, .cart-title { margin: 0; font-size: 1.25rem; }
+    .wishlist-close, .cart-close { background:none; border:none; font-size:1.5rem; cursor:pointer; color: var(--text-muted); }
+    .wishlist-items, .cart-items { flex: 1; overflow-y: auto; padding: 1rem; }
+    .wishlist-item, .cart-item { display: flex; gap: 1rem; padding: 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 1rem; }
+    .wishlist-item-image, .cart-item-image { width: 80px; height: 80px; border-radius: var(--radius-md); object-fit: cover; }
+    .cart-item-image { width: 60px; height: 60px; }
+    .wishlist-item-info, .cart-item-info { flex: 1; }
+    .wishlist-item-title, .cart-item-title { font-weight: 600; margin: 0; font-size: 0.9rem; }
+    .cart-item-details, .wishlist-item-details { font-size: 0.8rem; color: var(--text-secondary); text-transform: capitalize; margin-bottom: 0.5rem; }
+    .wishlist-item-price, .cart-item-price { color: var(--primary-color); font-weight: 600; }
+    .wishlist-item-actions { display: flex; flex-direction: column; gap: 0.5rem; align-items: center; justify-content: center; }
+    .remove-wishlist-item, .remove-item { background: none; border: none; color: var(--error-color); cursor: pointer; font-size: 1.25rem; padding: 0.25rem; }
+    .add-to-cart-from-wishlist { background: var(--primary-color); color:white; border:none; border-radius: var(--radius-md); padding: 0.5rem 0.75rem; font-size: 0.8rem; cursor: pointer; }
+    .wishlist-footer { padding: 1.5rem; border-top: 1px solid var(--border-color); }
+    .clear-wishlist-btn { width: 100%; background: transparent; color: var(--error-color); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .quantity-controls { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+    .quantity-btn { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 4px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .quantity { font-weight: 600; }
+    .cart-footer { padding: 1.5rem; border-top: 1px solid var(--border-color); }
+    .cart-total { display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 1.125rem; font-weight: 600; }
+    .cart-footer .actions { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+    .checkout-btn { width: 100%; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; border: none; padding: 1rem; border-radius: var(--radius-md); font-weight: 600; font-size: 1rem; cursor: pointer; }
+    .download-pdf-btn { width: 100%; background: transparent; color: var(--secondary-color); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .empty-cart, .empty-wishlist { text-align: center; padding: 2rem; color: var(--text-muted); }
+    
+    @media (max-width: 768px) { .product-detail-container { grid-template-columns: 1fr; } .product-details-column h1 { font-size: 2rem; } }
+  </style>
+</head>
+<body>
+  
+  <header class="header">
+    <nav class="nav container">
+      <a href="tienda.html" class="logo">ShopModern</a>
+      <div class="search-container">
+        <i class='bx bx-search search-icon'></i>
+        <input type="text" class="search-input" id="searchInput" placeholder="Buscar y volver a la tienda...">
+      </div>
+      <div class="header-actions">
+        <div id="wishlistToggle" class="wishlist-toggle" title="Lista de Deseos">
+            <i class='bx bx-heart'></i>
+            <span id="wishlistCount" class="wishlist-count">0</span>
+        </div>
+        <div id="cartToggle" class="cart-toggle" title="Carrito de Compras">
+            <i class='bx bx-shopping-bag'></i>
+            <span id="cartCount" class="cart-count">0</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Sidebars (Ahora sí, completos) -->
+  <aside class="wishlist-sidebar" id="wishlistSidebar">
+    <div class="wishlist-header">
+      <h2 class="wishlist-title">Lista de Deseos</h2>
+      <button class="wishlist-close" id="wishlistClose"><i class='bx bx-x'></i></button>
+    </div>
+    <div class="wishlist-items" id="wishlistItems"></div>
+    <div class="wishlist-footer">
+        <button class="clear-wishlist-btn" id="clearWishlistBtn" disabled>
+            <i class='bx bx-trash'></i> Limpiar Lista
+        </button>
+    </div>
+  </aside>
+  <div class="wishlist-overlay" id="wishlistOverlay"></div>
+
+  <aside class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h2 class="cart-title">Carrito de Compras</h2>
+      <button class="cart-close" id="cartClose"><i class='bx bx-x'></i></button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <span id="cartTotal">€0.00</span>
+      </div>
+      <div class="actions">
+        <button class="checkout-btn" id="checkoutBtn" disabled>Proceder al Pago</button>
+        <button class="download-pdf-btn" id="downloadPdfBtn" disabled>
+            <i class='bx bxs-file-pdf'></i> Descargar Pedido
+        </button>
+      </div>
+    </div>
+  </aside>
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <main class="product-detail-section">
+    <div class="container" id="productDetail">
+      <p>Cargando producto...</p>
+    </div>
+  </main>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="products.js"></script>
+  <script src="product-page.js"></script>
+
+</body>
+</html>
