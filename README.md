@@ -3,6 +3,11 @@
 ¡Bienvenido a **ShopModern**!  
 Esta es una guía para que descubras todas las funcionalidades que hemos diseñado para que tu experiencia de compra sea **rápida, intuitiva y agradable**.
 
+![Vista previa de la app](https://xococode.github.io/XocoShop/CapturaXocoshop.JPG)
+
+## 🚀 Acceso Rápido
+👉 [Abrir demo en vivo](https://xococode.github.io/XocoShop/)
+
 ---
 
 ## 🏛️ 1. La Página Principal: Tu Centro de Compras
