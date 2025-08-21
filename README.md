@@ -5,6 +5,7 @@ Esta es una guía para que descubras todas las funcionalidades que hemos diseña
 
 ![Vista previa de la app](https://xococode.github.io/XocoShop/CapturaXocoshop.JPG)
 
+
 ## 🚀 Acceso Rápido
 👉 [Abrir demo en vivo](https://xococode.github.io/XocoShop/)
 
